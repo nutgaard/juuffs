@@ -1,0 +1,58 @@
+# Version catalog is a central place for you to declare and version dependencies
+# https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
+# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+
+[versions]
+kotlin = "2.1.20"
+ktor = "3.2.0"
+kotlinxDatetime = "0.6.2"
+kotlinxSerializationJSON = "1.8.1"
+kotlinxCoroutines = "1.10.2"
+prometheus = "1.6.13"
+logback = "1.4.14"
+junit = "5.12.0"
+
+[libraries]
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinxDatetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinxSerialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJSON" }
+kotlinxCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+
+ktorServerCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktorServerNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktorServerContentNegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktorServerCallId = { module = "io.ktor:ktor-server-call-id", version.ref = "ktor" }
+ktorServerCallLoggin = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
+ktorServerTestHost = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
+ktorServerMetrics = { module = "io.ktor:ktor-server-metrics-micrometer", version.ref = "ktor" }
+ktorServerAuth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktorServerAuthJwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor" }
+ktorServerCors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
+ktorServerOpenapi = { module = "io.ktor:ktor-server-openapi", version.ref = "ktor" }
+ktorServerStatusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
+ktorServerDefaultHeaders = { module = "io.ktor:ktor-server-default-headers", version.ref = "ktor" }
+ktorServerRateLimiting = { module = "io.ktor:ktor-server-rate-limit", version.ref = "ktor" }
+
+ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktorClientCIO = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktorClientCallId = { module = "io.ktor:ktor-client-call-id", version.ref = "ktor" }
+
+ktorJSON = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+micrometeRegistryPrometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
+
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+khealth = { module = "dev.hayden:khealth", version = "3.0.2" }
+
+
+
+# Libraries can be bundled together for easier import
+[bundles]
+kotlinxEcosystem = ["kotlinxDatetime", "kotlinxSerialization", "kotlinxCoroutines"]
+ktorEcosystem = ["ktorServerCore", "ktorServerNetty", "ktorServerContentNegotiation", "ktorJSON", "ktorServerCallId", "ktorServerCallLoggin", "ktorServerMetrics", "micrometeRegistryPrometheus", "khealth", "ktorServerAuthJwt", "ktorServerAuth", "ktorServerCors", "ktorServerOpenapi", "ktorServerStatusPages", "ktorServerDefaultHeaders", "ktorServerRateLimiting"]
+ktorClientEcosystem = ["ktorClientCore", "ktorClientCIO", "ktorClientContentNegotiation", "ktorJSON", "ktorClientCallId"]
+ktorTestEcosystem = ["ktorServerTestHost"]
+
+[plugins]
+kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
