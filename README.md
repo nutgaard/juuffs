@@ -2,24 +2,46 @@
 
 Simple setup to get something akin to unleash.
 
-This project uses [Gradle](https://gradle.org/).
-To build and run the application, use the *Gradle* tool window by clicking the Gradle icon in the right-hand toolbar,
-or run it directly from the terminal:
+## Modules and apps
+Consists of one app, and two modules:
 
-* Run `./gradlew run` to build and run the application.
+```mermaid
+sequenceDiagram
+    participant YourApplication
+    participant JuufsClient
+    participant JuufsHttpClient
+    participant JuufsServer
+    
+    loop Periodisk oppdatering
+        JuufsClient-->>JuufsHttpClient: Fetch configration
+        JuufsHttpClient-->>JuufsServer: Fetch configration
+        JuufsServer-->>JuufsHttpClient: Configuration
+        JuufsHttpClient-->>JuufsClient: Configuration
+    end
+    
+
+    YourApplication-->>JuufsClient: isEnabled?
+    JuufsClient-->>JuufsClient: Evaluate configuration
+```
+
+### JuufsServer (`apps/app`)
+The server hosting the featuretoggle configuration. At this time it only supports static configuration,
+and would need a redeployment in order to update its configuration.
+
+### Client (`libs/client`)
+Client library to fetch and evaluate featuretoggle configurations.
+
+It uses `ktor-client` with a default `CIO` engine, implementing the `JuuffsHttpClient.kt` interface.
+And provides a standard implementation of `JuuffsClient.kt` which has a background task for fetching configuration, and exposes methods for evaluating toggles given a `Context`.
+
+### Utils (`libs/utils`)
+Utility library containing the shared domain model which is used by the backend app, and client.
+
+## Building it
 * Run `./gradlew build` to only build the application.
 * Run `./gradlew check` to run all checks, including tests.
 * Run `./gradlew clean` to clean all build outputs.
 
 Note the usage of the Gradle Wrapper (`./gradlew`).
-This is the suggested way to use Gradle in production projects.
-
-[Learn more about the Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
-
-[Learn more about Gradle tasks](https://docs.gradle.org/current/userguide/command_line_interface.html#common_tasks).
-
-This project follows the suggested multi-module setup and consists of the `app` and `utils` subprojects.
-The shared build logic was extracted to a convention plugin located in `buildSrc`.
-
 This project uses a version catalog (see `gradle/libs.versions.toml`) to declare and version dependencies
 and both a build cache and a configuration cache (see `gradle.properties`).
