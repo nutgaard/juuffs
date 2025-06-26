@@ -89,7 +89,7 @@ object FeatureToggles {
         @Serializable
         @SerialName("gradual")
         data class GradualEvaluation(val percentage: Int): Evaluation {
-            override fun isEnabled(ctx: Context): Boolean = Random.nextInt(0..100) < percentage
+            override fun isEnabled(ctx: Context): Boolean = Random.nextInt(0, 100) < percentage
         }
     }
 
