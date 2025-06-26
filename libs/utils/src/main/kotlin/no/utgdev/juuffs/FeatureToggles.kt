@@ -4,7 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import no.utgdev.utils.no.utgdev.juuffs.FeatureToggles.ContraintOperator.LIST_CONTAINS
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 object FeatureToggles {
     @Serializable
@@ -88,8 +87,11 @@ object FeatureToggles {
 
         @Serializable
         @SerialName("gradual")
-        data class GradualEvaluation(val percentage: Int): Evaluation {
-            override fun isEnabled(ctx: Context): Boolean = Random.nextInt(0, 100) < percentage
+        data class GradualEvaluation(
+            val percentage: Int,
+            val random: Random = Random.Default,
+        ) : Evaluation {
+            override fun isEnabled(ctx: Context): Boolean = random.nextInt(0, 100) < percentage
         }
     }
 
@@ -156,8 +158,8 @@ object FeatureToggles {
             evaluation = Evaluation.FixedEvaluation(isEnabled = isEnabled)
         }
 
-        fun gradual(percentage: Int) {
-            evaluation = Evaluation.GradualEvaluation(percentage)
+        fun gradual(percentage: Int, random: Random = Random.Default) {
+            evaluation = Evaluation.GradualEvaluation(percentage, random)
         }
 
         fun build(): Evaluation = evaluation
