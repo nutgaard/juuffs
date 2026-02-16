@@ -1,4 +1,4 @@
-package no.utgdev.utils.no.utgdev.juuffs
+package no.utgdev.juuffs
 
 import kotlin.random.Random
 import kotlin.test.Test

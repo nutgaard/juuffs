@@ -10,7 +10,7 @@ import io.ktor.client.request.get
 import io.ktor.http.appendPathSegments
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import no.utgdev.utils.no.utgdev.juuffs.FeatureToggles
+import no.utgdev.juuffs.FeatureToggles
 
 interface JuuffsHttpClient {
     suspend fun fetch(): List<FeatureToggles.Toggle>

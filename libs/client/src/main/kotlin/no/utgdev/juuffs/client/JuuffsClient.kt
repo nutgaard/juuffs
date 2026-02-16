@@ -3,11 +3,10 @@ package no.utgdev.juuffs.client
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import no.utgdev.utils.no.utgdev.juuffs.FeatureToggles
+import no.utgdev.juuffs.FeatureToggles
 import org.slf4j.LoggerFactory
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

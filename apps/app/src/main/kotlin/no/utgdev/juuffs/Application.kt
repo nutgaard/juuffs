@@ -6,9 +6,12 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 
 fun Application.juuffsModule() {
+    val config = Config()
+    val toggleService = ToggleService(config)
+
     routing {
         get("toggles") {
-            call.respond(featureToggles)
+            call.respond(toggleService.getToggles())
         }
     }
 }

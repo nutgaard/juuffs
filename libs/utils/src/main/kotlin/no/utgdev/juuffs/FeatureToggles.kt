@@ -1,17 +1,16 @@
-package no.utgdev.utils.no.utgdev.juuffs
+package no.utgdev.juuffs
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import no.utgdev.utils.no.utgdev.juuffs.FeatureToggles.ContraintOperator.LIST_CONTAINS
+import no.utgdev.juuffs.FeatureToggles.ContraintOperator.IN_LIST
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 object FeatureToggles {
     @Serializable
     data class Toggle(
         val name: String,
-        val variants: List<Variant>
+        val variants: List<Variant> = emptyList()
     ) {
         fun evaluate(ctx: Context): Boolean {
             return variants.any { it.evaluate(ctx) }
@@ -21,7 +20,7 @@ object FeatureToggles {
     @Serializable
     data class Variant(
         val name: String,
-        val constraints: List<Contraint>,
+        val constraints: List<Contraint> = emptyList(),
         val evaluation: Evaluation
     ) {
         fun evaluate(ctx: Context): Boolean {
@@ -37,6 +36,7 @@ object FeatureToggles {
 
         companion object {
             val Empty = Context(emptyMap())
+            fun of(vararg entries: Pair<String, String>) = Context(entries.toMap())
         }
     }
 
@@ -52,27 +52,27 @@ object FeatureToggles {
 
         @Serializable
         @SerialName("comparison")
-        data class Comparison(val ctxKey: String, val operator: ContraintOperator, val value: String) : Contraint {
+        data class Comparison(val ctxKey: String, val operator: ContraintOperator, @SerialName("value") val constraintValue: String) : Contraint {
             override fun evaluate(ctx: Context): Boolean {
-                val contraintValue = ctx.data[ctxKey]
-                return operator.evaluate(contraintValue, value)
+                val ctxValue = ctx.data[ctxKey]
+                return operator.evaluate(ctxValue, constraintValue)
             }
         }
     }
 
     enum class ContraintOperator {
-        EQUALS, NOT_EQUALS, STR_CONTAINS, NOT_STR_CONTAINS, LIST_CONTAINS, NOT_LIST_CONTAINS;
+        EQUALS, NOT_EQUALS, IN_STRING, NOT_IN_STRING, IN_LIST, NOT_IN_LIST;
 
-        fun evaluate(contrainsValue: String?, value: String): Boolean {
-            if (contrainsValue == null) return false
+        fun evaluate(ctxValue: String?, contraintvalue: String): Boolean {
+            if (ctxValue == null) return false
 
             return when (this) {
-                EQUALS -> contrainsValue == value
-                NOT_EQUALS -> contrainsValue != value
-                STR_CONTAINS -> value.contains(contrainsValue)
-                NOT_STR_CONTAINS -> !value.contains(contrainsValue)
-                LIST_CONTAINS -> contrainsValue.split(",").map{ it.trim() }.contains(value)
-                NOT_LIST_CONTAINS -> !contrainsValue.split(",").map{ it.trim() }.contains(value)
+                EQUALS -> ctxValue == contraintvalue
+                NOT_EQUALS -> ctxValue != contraintvalue
+                IN_STRING -> contraintvalue.contains(ctxValue)
+                NOT_IN_STRING -> !contraintvalue.contains(ctxValue)
+                IN_LIST -> contraintvalue.split(",").map{ it.trim() }.contains(ctxValue)
+                NOT_IN_LIST -> !contraintvalue.split(",").map{ it.trim() }.contains(ctxValue)
             }
         }
     }
@@ -146,7 +146,7 @@ object FeatureToggles {
         }
 
         infix fun String.listContains(other: String) {
-            contraints += Contraint.Comparison(this, LIST_CONTAINS, other)
+            contraints += Contraint.Comparison(this, IN_LIST, other)
         }
 
         fun build() : List<Contraint> = contraints

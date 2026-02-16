@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
 
 fun startApplication(useMock: Boolean = false) {
     val logger = LoggerFactory.getLogger("main")
-    val server = embeddedServer(Netty, port = 8080) {
+    val server = embeddedServer(Netty, port = 9090) {
         install(Logging.Plugin)
         install(Monitoring.Plugin)
         install(Security.Plugin) {

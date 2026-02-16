@@ -2,7 +2,7 @@ plugins {
     // Apply the shared build logic from a convention plugin.
     // The shared code is located in `buildSrc/src/main/kotlin/kotlin-jvm.gradle.kts`.
     id("buildsrc.convention.kotlin-jvm")
-
+    alias(libs.plugins.kotlinPluginSerialization)
     // Apply the Application plugin to add support for building an executable JVM application.
     application
 }
@@ -10,6 +10,7 @@ plugins {
 dependencies {
     implementation(libs.bundles.kotlinxEcosystem)
     implementation(libs.bundles.ktorEcosystem)
+    implementation(libs.bundles.ktorClientEcosystem)
     implementation(libs.logback)
     implementation(project(":libs:utils"))
     implementation("io.ktor:ktor-server-host-common:3.2.0")
