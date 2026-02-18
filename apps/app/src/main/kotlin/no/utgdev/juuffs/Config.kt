@@ -1,6 +1,9 @@
 package no.utgdev.juuffs
 
 import no.utgdev.juuffs.FeatureToggles.toggle
+import java.io.File
+import java.io.FileReader
+import java.util.Properties
 
 val featureToggles = listOf(
     toggle(name = "TH-2000-dsl") {
@@ -21,6 +24,30 @@ class Config {
     val sanityConfig = SanityClient.Config(
         projectId = "jy1r6rh3",
         dataset = "production",
-        token = "skYFHDALwzWde6Cmc6lKNKqZqMIvlM6fLsBttuwaPrUijjkH3xEVUlI5gyP7MwvsW8pmEQ50UiEdL7t1skvU4p7SErvBltZzIh9X40aTGk8WvTd8RsL7DuIZ9isFs3a4haqEz1Tg0azPeCEb6qtv3yweYVB4EJrif7Y6luqV0DUt7eqccf2L"
+        token = EnvUtils.getRequiredConfig("sanity_token")
     )
+}
+
+
+object EnvUtils {
+    fun getConfig(name: String, defaultValues: Map<String, String?> = emptyMap()): String? {
+        return System.getProperty(
+            name,
+            System.getenv(name) ?: defaultValues[name]
+        )
+    }
+
+    fun getRequiredConfig(name: String, defaultValues: Map<String, String?> = emptyMap()): String = requireNotNull(getConfig(name, defaultValues)) {
+        "Could not find property for environment variable $name"
+    }
+
+    fun readEnv() {
+        FileReader(File(".env")).use {
+            val properties = Properties()
+            properties.putAll(System.getProperties())
+            properties.load(it)
+
+            System.setProperties(properties)
+        }
+    }
 }

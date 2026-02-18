@@ -53,6 +53,7 @@ fun startApplication(useMock: Boolean = false) {
 }
 
 fun main() {
+    EnvUtils.readEnv()
     startApplication(useMock = false)
 }
 
